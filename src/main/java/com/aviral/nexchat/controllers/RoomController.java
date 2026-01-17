@@ -3,6 +3,7 @@ package com.aviral.nexchat.controllers;
 import com.aviral.nexchat.entities.Message;
 import com.aviral.nexchat.entities.Room;
 import com.aviral.nexchat.repositories.RoomRepository;
+import com.aviral.nexchat.utils.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/rooms")
+@CrossOrigin(Constants.FRONTEND_URL)
 public class RoomController {
 
     private final RoomRepository roomRepository;
