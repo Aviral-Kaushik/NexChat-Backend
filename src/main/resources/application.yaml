@@ -5,3 +5,12 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017
+
+      # Multi-Part Configuration
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 25MB
+
+      # Minimum File Size
+      file-size-threshold: 1KB
