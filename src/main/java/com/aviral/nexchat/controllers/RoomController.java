@@ -2,8 +2,9 @@ package com.aviral.nexchat.controllers;
 
 import com.aviral.nexchat.entities.Message;
 import com.aviral.nexchat.entities.Room;
-import com.aviral.nexchat.repositories.RoomRepository;
+import com.aviral.nexchat.services.RoomService;
 import com.aviral.nexchat.utils.Constants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,16 +16,13 @@ import java.util.List;
 @CrossOrigin(Constants.FRONTEND_URL)
 public class RoomController {
 
-    private final RoomRepository roomRepository;
-
-    public RoomController(RoomRepository roomRepository) {
-        this.roomRepository = roomRepository;
-    }
+    @Autowired
+    private RoomService roomService;
 
     // Create Room
     @PostMapping
     public ResponseEntity<?> createRoom(@RequestBody String roomId) {
-        if (roomRepository.findByRoomId(roomId) != null) {
+        if (roomService.getRoomById(roomId) != null) {
             // Room already created with room id
             return ResponseEntity.badRequest().body("Room Already Exits");
         }
@@ -32,7 +30,7 @@ public class RoomController {
         // Create Room
         Room room = new Room();
         room.setRoomId(roomId);
-        Room savedRoom = roomRepository.save(room);
+        Room savedRoom = roomService.saveRoom(room);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedRoom);
     }
@@ -40,7 +38,7 @@ public class RoomController {
     // Get Room
     @GetMapping("/{roomId}")
     public ResponseEntity<?> joinRoom(@PathVariable String roomId) {
-        Room room = roomRepository.findByRoomId(roomId);
+        Room room = roomService.getRoomById(roomId);
         if (room == null) {
             return ResponseEntity.badRequest().body("Room not found!");
         }
@@ -55,7 +53,7 @@ public class RoomController {
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
             @RequestParam(value = "size", defaultValue = "20", required = false) int size
     ) {
-        Room room = roomRepository.findByRoomId(roomId);
+        Room room = roomService.getRoomById(roomId);
 
         if (room == null) {
             return ResponseEntity.badRequest().body("Invalid Room Id!");

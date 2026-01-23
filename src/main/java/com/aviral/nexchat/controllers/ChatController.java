@@ -3,7 +3,7 @@ package com.aviral.nexchat.controllers;
 import com.aviral.nexchat.entities.Message;
 import com.aviral.nexchat.entities.Room;
 import com.aviral.nexchat.payload.MessageRequest;
-import com.aviral.nexchat.repositories.RoomRepository;
+import com.aviral.nexchat.services.RoomService;
 import com.aviral.nexchat.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class ChatController {
 
     @Autowired
-    private RoomRepository roomRepository;
+    private RoomService roomService;
 
     // For sending and Receiving Messages
     @MessageMapping("/sendMessage/{roomId}") // Message to be sent on /app/sendMessage/roomId
@@ -29,7 +29,7 @@ public class ChatController {
             @DestinationVariable String roomId,
             @RequestBody MessageRequest request
     ) {
-        Room room = roomRepository.findByRoomId(request.getRoomId());
+        Room room = roomService.getRoomById(request.getRoomId());
 
         Message message = new Message();
         message.setContent(request.getContent());
@@ -38,7 +38,7 @@ public class ChatController {
 
         if (room != null) {
             room.getMessages().add(message);
-            roomRepository.save(room);
+            roomService.saveRoom(room);
         } else {
             // Invalid Room
             throw new RuntimeException("Room not found!");
