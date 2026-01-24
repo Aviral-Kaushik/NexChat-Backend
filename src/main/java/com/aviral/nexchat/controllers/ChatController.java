@@ -3,6 +3,7 @@ package com.aviral.nexchat.controllers;
 import com.aviral.nexchat.entities.Message;
 import com.aviral.nexchat.entities.Room;
 import com.aviral.nexchat.payload.MessageRequest;
+import com.aviral.nexchat.services.MessageService;
 import com.aviral.nexchat.services.RoomService;
 import com.aviral.nexchat.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class ChatController {
     @Autowired
     private RoomService roomService;
 
+    @Autowired
+    private MessageService messageService;
+
     // For sending and Receiving Messages
     @MessageMapping("/sendMessage/{roomId}") // Message to be sent on /app/sendMessage/roomId
     @SendTo("/topic/room/{roomId}") // Subscribe to this endpoint
@@ -32,11 +36,16 @@ public class ChatController {
         Room room = roomService.getRoomById(request.getRoomId());
 
         Message message = new Message();
-        message.setContent(request.getContent());
+        message.setRoomId(request.getRoomId());
         message.setSender(request.getSender());
+        message.setContent(request.getContent());
+        message.setType(request.getType());
+        message.setFile(request.getFile());
         message.setTimestamp(LocalDateTime.now());
 
         if (room != null) {
+            message = messageService.saveMessage(message);
+
             room.getMessages().add(message);
             roomService.saveRoom(room);
         } else {
