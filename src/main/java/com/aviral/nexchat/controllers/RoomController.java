@@ -126,4 +126,12 @@ public class RoomController {
                 .body(resource);
 
     }
+
+    @DeleteMapping("/{roomId}")
+    public ResponseEntity<?> deleteRoom(
+            @PathVariable String roomId
+    ) {
+        roomService.deleteRoom(roomId);
+        return ResponseEntity.notFound().build();
+    }
 }
