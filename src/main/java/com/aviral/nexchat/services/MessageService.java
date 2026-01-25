@@ -5,8 +5,6 @@ import com.aviral.nexchat.repositories.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 public class MessageService {
 
@@ -24,7 +22,7 @@ public class MessageService {
     public Message updateMessage(Message savedMessage, Message newMessage) {
         Message message = new Message();
 
-        message.setId(savedMessage.getId());
+        message.setMessageId(savedMessage.getMessageId());
         message.setRoomId(savedMessage.getRoomId());
         message.setSender(newMessage.getSender());
         message.setContent(newMessage.getContent());

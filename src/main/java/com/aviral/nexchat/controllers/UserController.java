@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(Constants.FRONTEND_URL)
+@CrossOrigin(origins = Constants.FRONTEND_URL)
 public class UserController {
 
     @Autowired

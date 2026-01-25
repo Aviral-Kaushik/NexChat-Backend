@@ -45,6 +45,7 @@ public class UserService {
     public User updateUser(User oldUserData, User updatedUserData) {
         oldUserData.setUserName(updatedUserData.getUserName());
         oldUserData.setPassword(Objects.requireNonNull(passwordEncoder.encode(updatedUserData.getPassword())));
+        oldUserData.setEmail(updatedUserData.getEmail());
 
         userRepository.save(oldUserData);
 

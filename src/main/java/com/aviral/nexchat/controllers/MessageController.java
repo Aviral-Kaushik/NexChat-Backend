@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/message")
-@CrossOrigin(Constants.FRONTEND_URL)
+@CrossOrigin(origins = Constants.FRONTEND_URL)
 public class MessageController {
 
     @Autowired

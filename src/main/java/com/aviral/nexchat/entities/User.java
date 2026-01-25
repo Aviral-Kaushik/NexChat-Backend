@@ -25,6 +25,8 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    private String email;
+
     private List<String> roles;
 
     private LocalDateTime createdAt;

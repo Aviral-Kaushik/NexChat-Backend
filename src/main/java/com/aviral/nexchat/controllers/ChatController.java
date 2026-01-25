@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.time.LocalDateTime;
 
 @Controller
-@CrossOrigin(Constants.FRONTEND_URL)
+@CrossOrigin(origins = Constants.FRONTEND_URL)
 public class ChatController {
 
     @Autowired

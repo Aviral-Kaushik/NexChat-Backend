@@ -2,14 +2,17 @@ package com.aviral.nexchat.controllers.authentication;
 
 import com.aviral.nexchat.entities.User;
 import com.aviral.nexchat.services.UserService;
+import com.aviral.nexchat.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin(origins = Constants.FRONTEND_URL)
 public class SignupController {
 
     @Autowired

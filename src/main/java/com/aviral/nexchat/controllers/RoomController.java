@@ -23,7 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/rooms")
-@CrossOrigin(Constants.FRONTEND_URL)
+@CrossOrigin(origins = Constants.FRONTEND_URL)
 public class RoomController {
 
     @Autowired
