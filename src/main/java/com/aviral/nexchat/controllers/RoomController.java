@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/rooms")
@@ -31,7 +32,14 @@ public class RoomController {
 
     // Create Room
     @PostMapping
-    public ResponseEntity<?> createRoom(@RequestBody String roomId) {
+    public ResponseEntity<?> createRoom(@RequestBody Map<String, String> payload) {
+
+        String roomId = payload.get("roomId");
+
+        if (roomId == null || roomId.isBlank()) {
+            return ResponseEntity.badRequest().body("roomId is required");
+        }
+
         if (roomService.getRoomById(roomId) != null) {
             // Room already created with room id
             return ResponseEntity.badRequest().body("Room Already Exits");
