@@ -47,6 +47,7 @@ public class ChatController {
             message = messageService.saveMessage(message);
 
             room.getMessages().add(message);
+            room.setLastMessageAt(LocalDateTime.now());
             roomService.saveRoom(room);
         } else {
             // Invalid Room

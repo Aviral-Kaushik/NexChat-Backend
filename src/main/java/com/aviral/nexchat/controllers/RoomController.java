@@ -1,9 +1,8 @@
 package com.aviral.nexchat.controllers;
 
-import com.aviral.nexchat.entities.FileUploadResponse;
-import com.aviral.nexchat.entities.Message;
-import com.aviral.nexchat.entities.Room;
+import com.aviral.nexchat.entities.*;
 import com.aviral.nexchat.services.RoomService;
+import com.aviral.nexchat.services.UserService;
 import com.aviral.nexchat.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -12,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,9 +30,15 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
 
+    @Autowired
+    private UserService userService;
+
     // Create Room
     @PostMapping
-    public ResponseEntity<?> createRoom(@RequestBody Map<String, String> payload) {
+    public ResponseEntity<?> createRoom(
+            @RequestBody Map<String, String> payload,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
 
         String roomId = payload.get("roomId");
 
@@ -50,16 +56,25 @@ public class RoomController {
         room.setRoomId(roomId);
         Room savedRoom = roomService.saveRoom(room);
 
+        // Add Room to the user rooms
+        userService.addRoomToUser(userDetails.getUser(), room);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(savedRoom);
     }
 
     // Get Room
     @GetMapping("/{roomId}")
-    public ResponseEntity<?> joinRoom(@PathVariable String roomId) {
+    public ResponseEntity<?> joinRoom(
+            @PathVariable String roomId,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
         Room room = roomService.getRoomById(roomId);
         if (room == null) {
             return ResponseEntity.badRequest().body("Room not found!");
         }
+
+        // Add Room to user's room is not exists
+        userService.addRoomToUser(userDetails.getUser(), room);
 
         return ResponseEntity.ok().body(room);
     }

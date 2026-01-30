@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,4 +25,7 @@ public class Room {
 
     @DBRef(lazy = true)
     private List<Message> messages = new ArrayList<>();
+
+    // Time Stamp for the last message so that we can query recent chats for users
+    private LocalDateTime lastMessageAt;
 }

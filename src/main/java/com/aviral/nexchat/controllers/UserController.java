@@ -1,5 +1,7 @@
 package com.aviral.nexchat.controllers;
 
+import com.aviral.nexchat.entities.CustomUserDetails;
+import com.aviral.nexchat.entities.Room;
 import com.aviral.nexchat.entities.User;
 import com.aviral.nexchat.services.UserService;
 import com.aviral.nexchat.utils.Constants;
@@ -7,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -71,6 +76,13 @@ public class UserController {
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok("Hi!, " + user.getUserName());
+    }
+
+    @GetMapping("/chats")
+    public ResponseEntity<List<Room>> getUserCats(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        return ResponseEntity.ok(userService.getUserChatsSorted(userDetails.getUser()));
     }
 
 }

@@ -3,6 +3,7 @@ package com.aviral.nexchat.entities;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -26,6 +27,10 @@ public class User {
     private String password;
 
     private String email;
+
+    // List of Rooms chats of a user to show him recent chats
+    @DBRef(lazy = true)
+    private List<Room> chats;
 
     private List<String> roles;
 

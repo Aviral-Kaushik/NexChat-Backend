@@ -1,6 +1,6 @@
 package com.aviral.nexchat.services;
 
-import com.aviral.nexchat.entities.User;
+import com.aviral.nexchat.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,10 +20,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null)
             throw new UsernameNotFoundException("User not found wih username: " + username);
 
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUserName())
-                .password(user.getPassword())
-                .roles(user.getRoles().toArray(new String[0]))
-                .build();
+        return new CustomUserDetails(user);
     }
 }
