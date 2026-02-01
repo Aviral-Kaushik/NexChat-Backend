@@ -21,6 +21,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/rooms")
@@ -77,6 +79,45 @@ public class RoomController {
         userService.addRoomToUser(userDetails.getUser(), room);
 
         return ResponseEntity.ok().body(room);
+    }
+
+    @PostMapping("one-to-one")
+    public ResponseEntity<?> createOneToOneRoom(
+            @RequestParam("username") String username,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        if (userDetails == null || userDetails.getUser() == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid User!");
+
+        if (username == null || username.isBlank())
+            return ResponseEntity.badRequest().body("Invalid username for creating room");
+
+        String currentUsername = userDetails.getUsername();
+
+        if (currentUsername.equals(username))
+            return ResponseEntity.badRequest().body("Cannot create room with same user");
+
+        User otherUser = userService.getUserByUserName(username);
+        if (otherUser == null)
+            return ResponseEntity.badRequest().body("Invalid user for creating room");
+
+        // Deterministic roomId
+        String roomId = Stream.of(currentUsername, username)
+                .sorted()
+                .collect(Collectors.joining("-"));
+
+        Room room = roomService.getRoomById(roomId);
+
+        if (room == null) {
+            room = new Room();
+            room.setRoomId(roomId);
+            room = roomService.saveRoom(room);
+        }
+
+        userService.addRoomToUser(userDetails.getUser(), room);
+        userService.addRoomToUser(otherUser, room);
+
+        return ResponseEntity.ok(room);
     }
 
     // Get Messages of the Room
