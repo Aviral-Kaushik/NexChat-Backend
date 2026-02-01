@@ -85,4 +85,9 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserChatsSorted(userDetails.getUser()));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<User>> searchUsers(@RequestParam("q") String q) {
+        return ResponseEntity.ok(userService.searchUser(q));
+    }
+
 }

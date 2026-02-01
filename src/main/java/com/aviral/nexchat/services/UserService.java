@@ -100,4 +100,12 @@ public class UserService {
                 })
                 .toList();
     }
+
+    public List<User> searchUser(String username) {
+        return userRepository
+                .findByUserNameStartingWithIgnoreCase(username)
+                .stream()
+                .limit(10)
+                .toList();
+    }
 }
