@@ -79,7 +79,7 @@ public class UserController {
     }
 
     @GetMapping("/chats")
-    public ResponseEntity<List<Room>> getUserCats(
+    public ResponseEntity<List<Room>> getUserChats(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         return ResponseEntity.ok(userService.getUserChatsSorted(userDetails.getUser()));

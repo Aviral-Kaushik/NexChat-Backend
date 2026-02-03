@@ -111,6 +111,8 @@ public class RoomController {
         if (room == null) {
             room = new Room();
             room.setRoomId(roomId);
+            room.setUsernames(List.of(currentUsername, username));
+            room.setOneToOneRoom(true);
             room = roomService.saveRoom(room);
         }
 

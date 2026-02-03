@@ -76,6 +76,7 @@ public class UserService {
 
         boolean alreadyJoined = user.getChats()
                 .stream()
+                .filter(Objects::nonNull)
                 .anyMatch(r -> r.getRoomId().equals(room.getRoomId()));
 
         if (!alreadyJoined) {

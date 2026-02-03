@@ -26,6 +26,11 @@ public class Room {
     @DBRef(lazy = true)
     private List<Message> messages = new ArrayList<>();
 
+    private boolean oneToOneRoom;
+
+    // For 1 to 1 chat, this field contains usernames of the 2 users included in the chat
+    private List<String> usernames;
+
     // Time Stamp for the last message so that we can query recent chats for users
     private LocalDateTime lastMessageAt;
 }
