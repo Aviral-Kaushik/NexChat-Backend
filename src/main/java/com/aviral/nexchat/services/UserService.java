@@ -4,6 +4,8 @@ import com.aviral.nexchat.entities.Room;
 import com.aviral.nexchat.entities.User;
 import com.aviral.nexchat.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,7 @@ public class UserService {
         }
     }
 
+    @CacheEvict(value = "userSearch", allEntries = true)
     public void saveUser(User user) {
         userRepository.save(user);
     }
@@ -44,6 +47,7 @@ public class UserService {
         return userRepository.findByUserName(username);
     }
 
+    @CacheEvict(value = "userSearch", allEntries = true)
     public User updateUser(User oldUserData, User updatedUserData) {
         oldUserData.setUserName(updatedUserData.getUserName());
         oldUserData.setPassword(Objects.requireNonNull(passwordEncoder.encode(updatedUserData.getPassword())));
@@ -102,6 +106,11 @@ public class UserService {
                 .toList();
     }
 
+    @Cacheable(
+            value = "userSearch",
+            key = "#query.toLowerCase()",
+            unless = "#result == null || #result.isEmpty()"
+    )
     public List<User> searchUser(String username) {
         return userRepository
                 .findByUserNameStartingWithIgnoreCase(username)
