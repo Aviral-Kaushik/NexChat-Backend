@@ -1,4 +1,4 @@
-package com.aviral.nexchat.entities;
+package com.aviral.nexchat.entities.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChangePasswordRequest {
-    private String currentPassword;
+public class ResetPasswordRequest {
+    private String email;
+    private String token;
     private String newPassword;
 }

@@ -1,6 +1,6 @@
 package com.aviral.nexchat.controllers;
 
-import com.aviral.nexchat.entities.ChangePasswordRequest;
+import com.aviral.nexchat.entities.requests.ChangePasswordRequest;
 import com.aviral.nexchat.entities.CustomUserDetails;
 import com.aviral.nexchat.entities.Room;
 import com.aviral.nexchat.entities.User;

@@ -127,4 +127,8 @@ public class UserService {
         user.setPassword(Objects.requireNonNull(passwordEncoder.encode(newPassword)));
         saveUser(user);
     }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }

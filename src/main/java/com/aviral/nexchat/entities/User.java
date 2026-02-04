@@ -36,5 +36,9 @@ public class User {
 
     private List<String> roles;
 
+    private String resetToken;
+
+    private LocalDateTime resetTokenExpiry;
+
     private LocalDateTime createdAt;
 }

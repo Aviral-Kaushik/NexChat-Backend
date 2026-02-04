@@ -10,6 +10,18 @@ spring:
       host: localhost
       port: 6379
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: zaviralkaushik@gmail.com
+    password: ${EMAIL_APP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
       # Multi-Part Configuration
   servlet:
     multipart:
@@ -18,3 +30,8 @@ spring:
 
       # Minimum File Size
       file-size-threshold: 1KB
+
+app:
+  mail:
+    from: NexChat <zaviralkaushik@gmail.com>
+    frontend-reset-url: http://localhost:3000/reset-password
