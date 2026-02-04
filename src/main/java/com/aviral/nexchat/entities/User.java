@@ -28,6 +28,7 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @Indexed(unique = true)
     private String email;
 
     // List of Rooms chats of a user to show him recent chats

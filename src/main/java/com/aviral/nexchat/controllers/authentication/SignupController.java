@@ -3,6 +3,7 @@ package com.aviral.nexchat.controllers.authentication;
 import com.aviral.nexchat.entities.User;
 import com.aviral.nexchat.services.UserService;
 import com.aviral.nexchat.utils.Constants;
+import com.mongodb.DuplicateKeyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +27,11 @@ public class SignupController {
             return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
         }
 
-        userService.createUser(user);
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        try {
+            userService.createUser(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (DuplicateKeyException exception) {
+            return ResponseEntity.badRequest().body("Email already registered");
+        }
     }
 }
