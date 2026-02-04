@@ -1,5 +1,6 @@
 package com.aviral.nexchat.controllers;
 
+import com.aviral.nexchat.entities.ChangePasswordRequest;
 import com.aviral.nexchat.entities.CustomUserDetails;
 import com.aviral.nexchat.entities.Room;
 import com.aviral.nexchat.entities.User;
@@ -39,10 +40,14 @@ public class UserController {
     }
 
     @PatchMapping
-    public ResponseEntity<?> updateUser(@RequestBody User newUserData) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<?> updateUser(
+            @RequestBody User newUserData,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        if (userDetails == null || userDetails.getUser() == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid User!");
 
-        User user = userService.getUserByUserName(authentication.getName());
+        User user = userService.getUserByUserName(userDetails.getUser().getUserName());
 
         if (user == null)
             return ResponseEntity.notFound().build();
@@ -53,10 +58,13 @@ public class UserController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<?> deleteUser(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        if (userDetails == null || userDetails.getUser() == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid User!");
 
-        User user = userService.getUserByUserName(authentication.getName());
+        User user = userService.getUserByUserName(userDetails.getUser().getUserName());
 
         if (user == null)
             return ResponseEntity.notFound().build();
@@ -64,18 +72,6 @@ public class UserController {
         userService.deleteUserById(user.getId());
 
         return ResponseEntity.ok("User Deleted Successfully!");
-    }
-
-    @GetMapping("greet")
-    public ResponseEntity<?> greet() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        User user = userService.getUserByUserName(authentication.getName());
-
-        if (user == null)
-            return ResponseEntity.notFound().build();
-
-        return ResponseEntity.ok("Hi!, " + user.getUserName());
     }
 
     @GetMapping("/chats")
@@ -90,4 +86,21 @@ public class UserController {
         return ResponseEntity.ok(userService.searchUser(q));
     }
 
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(
+            @RequestBody ChangePasswordRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        User user = userDetails.getUser();
+
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid User!");
+
+        if (!userService.comparePasswords(request.getCurrentPassword(), user.getPassword()))
+            return ResponseEntity.badRequest().body("Current password is incorrect");
+
+        userService.updatePassword(user, request.getNewPassword());
+
+        return ResponseEntity.ok("Password Updated Successfully!");
+    }
 }

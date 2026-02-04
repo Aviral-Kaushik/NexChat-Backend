@@ -118,4 +118,13 @@ public class UserService {
                 .limit(10)
                 .toList();
     }
+
+    public boolean comparePasswords(String newPassword, String oldPassword) {
+        return passwordEncoder.matches(newPassword, oldPassword);
+    }
+
+    public void updatePassword(User user, String newPassword) {
+        user.setPassword(Objects.requireNonNull(passwordEncoder.encode(newPassword)));
+        saveUser(user);
+    }
 }
